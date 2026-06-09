@@ -33,11 +33,13 @@
             margin-bottom: 20px;
         }
 
-        img {
-            max-width: 100%;
+        /* CHỈNH ẢNH THẮP HƯƠNG NHỎ LẠI */
+        .image-area img {
+            max-width: 250px; /* Giảm kích thước ảnh bát hương xuống (bạn có thể thay đổi số này) */
             height: auto;
             display: block;
             border-radius: 10px;
+            margin: 0 auto; /* Căn giữa ảnh */
         }
 
         /* CSS NÚT CHUYỂN TRANG MỚI THEO STYLE CŨ */
@@ -166,7 +168,7 @@
             z-index: 9999;
             pointer-events: none;
             display: none; 
-            max-width: 250px;
+            max-width: 250px; /* Trả lại kích thước to như cũ cho Ông Tiên */
         }
 
         .hien-hon {
@@ -191,7 +193,7 @@
             }
             100% { 
                 opacity: 0; 
-                transform: translate(-50%, -100%) scale(1.5); 
+                transform: translate(-50%, -100%) scale(1.5); /* Trả lại độ phình to lúc bay đi như gốc */
                 filter: drop-shadow(0 0 50px rgba(255,255,255,0)) blur(5px); 
             }
         }
