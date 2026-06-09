@@ -2,19 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Random đề thi văn</title>
-    <link rel="stylesheet" href="random.css"> <!-- Link your CSS file here -->
+    <style>
+        /* --- GỘP CSS VÀO ĐÂY ĐỂ TRANG LUÔN CHẠY ĐẸP --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #question-container {
+            background-color: #f8f9fa;
+            border: 2px dashed #9face6;
+            border-radius: 10px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        #question {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 0;
+        }
+
+        #generate-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        #generate-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.6);
+        }
+
+        #generate-btn:active {
+            transform: translateY(1px);
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            font-style: italic;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>lộc đoán đề văn</h1>
+        <h1>Lộc Đoán Đề Văn</h1>
+        
         <div id="question-container">
-            <p id="question">Ấn vào nút dưới đây để biết đề văn </p>
+            <p id="question">Ấn vào nút dưới đây để biết đề văn nhé 👇</p>
         </div>
+        
         <button id="generate-btn">Ấn Ấn Ấn</button>
-        <p class="disclaimer">Nội dung này chỉ để giải trí. Không phải thông tin chính thống nào. Hãy ôn thi thật kĩ càng đọc đề và kàm bài cẩn thận để đạt kết quả cao nhất. gút lắc🍀!</p>
+        
+        <p class="disclaimer">Nội dung này chỉ để giải trí. Không phải thông tin chính thống nào. Hãy ôn thi thật kĩ càng, đọc đề và làm bài cẩn thận để đạt kết quả cao nhất. Gút lắc 🍀!</p>
     </div>
 
-    <script src="random.js"></script> 
+    <script>
+        // --- GỘP JS VÀ CẬP NHẬT DANH SÁCH ĐỀ MỚI ---
+        
+        // Mảng chứa các đề thi văn mới đã được cập nhật
+        var questions = [
+            "Lòng biết ơn",
+            "Trách nhiệm của người trẻ đối với bản thân, gia đình và xã hội",
+            "Sự kiên trì, bền bỉ trong cuộc sống",
+            "Tác động của mạng xã hội đối với giới trẻ",
+            "Khát vọng, ước mơ của tuổi trẻ",
+            "Dạng so sánh: Ước mơ và hành động (Có ước mơ quan trọng hơn hay hành động quan trọng hơn?)",
+            "Dạng so sánh: Thành công và hạnh phúc (Thành công có phải là thước đo của hạnh phúc không?)",
+            "Dạng so sánh: Tự tin và khiêm tốn (Người trẻ cần ưu tiên phẩm chất nào hơn?)",
+            "Dạng so sánh: Tri thức và nhân cách (Tri thức hay nhân cách quyết định giá trị con người nhiều hơn?)",
+            "Dạng so sánh: Cống hiến và hưởng thụ (Tuổi trẻ nên sống để cống hiến hay để tận hưởng cuộc sống?)",
+            "So sánh 2 tác phẩm văn học",
+            "Tốt nhất là lo học đi, đừng đoán già đoán non nữa! 📚" // Giữ lại 1 câu vui nhộn
+        ];
+
+        // Hàm tạo câu hỏi ngẫu nhiên
+        function generateRandomQuestion() {
+            var randomIndex = Math.floor(Math.random() * questions.length);
+            return questions[randomIndex];
+        }
+
+        // Lấy các phần tử DOM
+        var questionContainer = document.getElementById('question');
+        var generateBtn = document.getElementById('generate-btn');
+
+        // Thêm sự kiện click cho nút
+        generateBtn.addEventListener('click', function() {
+            // Thêm hiệu ứng nhấp nháy nhỏ khi đổi text
+            questionContainer.style.opacity = 0;
+            
+            setTimeout(function() {
+                questionContainer.innerHTML = "Đề thi ngày mai có thể là:<br><br><span style='font-size: 1.4rem; color: #2980b9;'>" + generateRandomQuestion() + "</span>";
+                questionContainer.style.opacity = 1;
+            }, 200);
+        });
+    </script>
+</body>
 </html>
