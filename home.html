@@ -4,10 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chúc Thi Tốt!</title>
-    <link rel="stylesheet" href="home.css">
+    <style>
+        /* --- PHẦN CSS ĐÃ ĐƯỢC GỘP VÀ SỬA LỖI --- */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; 
+        }
+
+        .container {
+            position: relative;
+            width: 100%; /* Thêm để container chiếm trọn màn hình */
+            height: 100%; /* Thêm để giới hạn không gian bay của nút */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        #e {
+            width: 800px;
+            max-width: 90%; /* Sửa lỗi 2: Giúp ảnh không bị tràn trên điện thoại */
+            height: auto;   /* Sửa lỗi 2: Giữ đúng tỉ lệ ảnh */
+            animation: bounce 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-family: 'font';
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        .grass-rain {
+            width: 100%;
+            max-width: 1000px;
+            height: 400px;
+            pointer-events: none; 
+            position: absolute; /* Thêm absolute để mưa cỏ rơi đè lên khung nền */
+            top: 0;
+        }
+
+        .grass {
+            position: absolute;
+            width: 70px; 
+            height: 70px;
+            border-radius: 50%;
+            pointer-events: none; 
+            animation: fall 10s linear infinite; 
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(800px);
+                opacity: 0; 
+            }
+        }
+
+        @font-face {
+            font-family: 'font';
+            src: url('./tainguyen/font.ttf') format('truetype');
+            font-weight: 400;
+        }
+
+        #main {
+            /* Sửa lỗi 1: ĐÃ XÓA position: relative; ở đây */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50; /* Đưa div này lên trên */
+        }
+
+        #Button {
+            position: absolute; /* Đặt tuyệt đối so với .container */
+            padding: 15px 30px; /* Dùng padding thay vì set cứng width/height */
+            font-size: 1rem;
+            color: #ff7e5f;
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Sửa lỗi 1: Thêm hiệu ứng lướt mượt mà */
+            z-index: 100;
+        }
+
+        #Button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2); /* Thêm bóng nhẹ cho đẹp */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Chú ý: Cậu vẫn cần thư mục 'tainguyen' chứa hình e.jpg, video2.mp4... ngang hàng với file này nhé -->
         <img src="./tainguyen/e.jpg" alt="logo" id="e">
         <h1 id="txt1">Nghe nói mai bạn thi rồi đúng không?</h1>
         <h1 id="txt2">Nếu vậy thì...</h1>
@@ -16,17 +129,174 @@
         <div class="grass-rain" id="grassRain"></div>
         <h1 id="txt4">Chúc cậu thật nhiều may mắn nhé!</h1>
         <h1 id="txt5">Cố gắng lên! Try your best!!</h1>
+        
         <div id="main">
-            <button id = "Button"> Ấn vào đây để nhận thêm quà </button>
+            <button id="Button"> Ấn vào đây để nhận thêm quà </button>
         </div>
 
-        <video id="video" width="100%" height="100%" controls style="display: none;">
+        <!-- Sửa lỗi 3: Thêm thuộc tính muted để đảm bảo video tự động play được -->
+        <video id="video" width="100%" height="100%" controls muted style="display: none; position: absolute; z-index: 900; background: black;">
             <source src="./tainguyen/video2.mp4" type="video/mp4">
             Trình duyệt của bạn không hỗ trợ video.
         </video>
-      
     </div>
 
-    <script src="home.js"></script>
+    <script>
+        // --- PHẦN JAVASCRIPT ĐÃ ĐƯỢC GỘP VÀ TỐI ƯU ---
+
+        var elements = [
+            document.getElementById('e'),
+            document.getElementById('txt1'),
+            document.getElementById('txt2'),
+            document.getElementById('txt3'),
+            document.getElementById('txtRain'),
+            document.getElementById('grassRain'),
+            document.getElementById('txt4'),
+            document.getElementById('txt5'),
+            document.getElementById('main'),
+        ];
+
+        var grassRain = document.getElementById('grassRain');
+        var flowerImages = [
+            './tainguyen/clover.png',
+            './tainguyen/clover3.png',
+        ];
+
+        function createFlowers() {
+            for (var i = 0; i < 50; i++) { // Giảm số lượng hoa 1 chút để đỡ lag máy
+                var flower = document.createElement('img');
+                flower.src = flowerImages[Math.floor(Math.random() * flowerImages.length)];
+                flower.classList.add('grass'); 
+                flower.style.left = Math.random() * 100 + '%'; 
+                flower.style.animationDuration = (Math.random() * 5 + 3) + 's'; 
+                // Cung cấp ảnh placeholder dự phòng nếu không tìm thấy file clover.png
+                flower.onerror = function() {
+                    this.src = 'https://cdn-icons-png.flaticon.com/512/1004/1004860.png'; 
+                };
+                grassRain.appendChild(flower); 
+            }
+        }
+
+        // Ẩn tất cả ban đầu
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });
+
+        var delay = 1500; // Mình giảm xuống 1.5s để xem mượt và nhanh hơn (cậu có thể đổi lại 2000)
+
+        function showElement(index) {
+            if (index >= elements.length) return;
+
+            var element = elements[index];
+            var currentDelay = (element.id === 'grassRain') ? 4000 : delay;
+
+            elements.forEach(function(e) {
+                e.style.display = 'none';
+            });
+
+            element.style.display = (element.id === 'main') ? 'flex' : 'block';
+
+            if (element.id === 'grassRain') {
+                createFlowers();
+            }
+
+            setTimeout(function() {
+                showElement(index + 1);
+            }, currentDelay);
+        }
+
+        // Bắt đầu chuỗi hiệu ứng
+        showElement(0);
+
+        // Hiệu ứng chạy trốn của nút
+        var button = document.getElementById('Button');
+        var hoverCount = 0;
+
+        function moveButton() {
+            if (!window.matchMedia('(max-width: 768px)').matches) {
+                button.addEventListener('mouseenter', function() {
+                    if (hoverCount < 5) {
+                        var containerRect = document.querySelector('.container').getBoundingClientRect();
+                        var buttonRect = button.getBoundingClientRect();
+
+                        // Sửa lỗi 4: Đảm bảo nút không bị văng ra khỏi màn hình
+                        var maxX = containerRect.width - buttonRect.width - 20; 
+                        var maxY = containerRect.height - buttonRect.height - 20;
+
+                        if (maxX > 0 && maxY > 0) {
+                            var randomX = Math.floor(Math.random() * maxX);
+                            var randomY = Math.floor(Math.random() * maxY);
+
+                            button.style.left = randomX + 'px';
+                            button.style.top = randomY + 'px';
+                            hoverCount++;
+                        }
+                    }
+                });
+            }
+        }
+
+        moveButton();
+
+        // Xử lý khi nhấn nút thành công
+        button.addEventListener('click', function() {
+            var video = document.getElementById('video');
+            video.style.display = 'block';
+            video.play();
+            
+            button.style.display = 'none';
+
+            var exit = document.createElement('button');
+            exit.innerHTML = 'Khấn Online';
+            exit.style.position = 'absolute';
+            exit.style.top = '20px';
+            exit.style.right = '20px'; // Đặt góc phải cho đẹp
+            exit.style.zIndex = '1000';
+            exit.style.padding = '10px 40px';
+            exit.style.border = 'none';
+            exit.style.borderRadius = '5px';
+            exit.style.backgroundColor = '#f00';
+            exit.style.color = '#fff';
+            exit.style.cursor = 'pointer';
+            exit.style.fontWeight = 'bold';
+
+            document.body.appendChild(exit);
+            exit.addEventListener('click', function() {
+                // Thay thế document.location.href bằng Modal thông báo để tránh lỗi sandbox
+                var modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+                modal.style.backgroundColor = 'white';
+                modal.style.padding = '30px';
+                modal.style.borderRadius = '10px';
+                modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                modal.style.zIndex = '2000';
+                modal.style.color = '#333';
+                modal.style.textAlign = 'center';
+                modal.style.fontFamily = 'Arial, sans-serif';
+                
+                modal.innerHTML = '<h2 style="margin-top: 0; color: #ff7e5f;">Chuyển Trang</h2><p>Do giới hạn của môi trường xem trước (preview), tính năng chuyển trang bị vô hiệu hóa.</p><p>Khi bạn tải source code về máy tính, hãy mở trực tiếp file <b>khanonline.html</b> nhé!</p><button id="closeModalBtn" style="margin-top: 15px; padding: 10px 20px; background: #ff7e5f; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">Đã hiểu</button>';
+                
+                var overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0,0,0,0.6)';
+                overlay.style.zIndex = '1999';
+
+                document.body.appendChild(overlay);
+                document.body.appendChild(modal);
+
+                document.getElementById('closeModalBtn').addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                    document.body.removeChild(overlay);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
