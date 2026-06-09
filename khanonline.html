@@ -26,27 +26,50 @@
             padding: 20px;
         }
 
+        /* Khung bọc ảnh và nút chuyển trang để chúng đứng cạnh nhau */
+        .image-area {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+
+        /* CSS NÚT CHUYỂN TRANG MỚI THEO STYLE CŨ */
         #chuyentrang {
+            opacity: 0; /* Ẩn đi chờ gọi hồn */
+            pointer-events: none; /* Không cho bấm khi đang ẩn */
             position: absolute;
-            top: -40px;
-            right: 20px;
+            top: -40px; /* Vị trí gốc như bạn muốn ban đầu */
+            right: 0px; /* Căn mép phải của ảnh */
             padding: 8px 15px;
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Màu xanh lá chuẩn */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             z-index: 100;
+            transform: translateY(20px); /* Lùi xuống một chút để lát bật lên */
+            transition: background-color 0.3s;
+        }
+
+        #chuyentrang.show-btn {
+            pointer-events: auto; /* Cho phép bấm */
+            animation: slideUpFade 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         #chuyentrang:hover {
             background-color: #45a049;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
+        @keyframes slideUpFade {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
 
         #nhap {
@@ -58,6 +81,7 @@
             outline: none;
             margin-bottom: 15px;
             transition: all 0.3s;
+            box-sizing: border-box;
         }
 
         #nhap:focus {
@@ -70,7 +94,7 @@
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background-color: #ff416c;
+            background-color: #ff416c; /* Màu hồng gốc của nút Cầu nguyện */
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -107,13 +131,14 @@
             padding: 25px;
             border-radius: 12px;
             width: 80%;
-            max-width: 400px;
+            max-width: 350px;
             position: relative;
             text-align: center;
             font-size: 18px;
             line-height: 1.5;
             color: #333;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-sizing: border-box;
         }
 
         .close {
@@ -139,8 +164,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             z-index: 9999;
-            pointer-events: none; /* Tránh click nhầm vào ảnh */
-            display: none; /* Ẩn mặc định */
+            pointer-events: none;
+            display: none; 
             max-width: 250px;
         }
 
@@ -162,11 +187,11 @@
             70% { 
                 opacity: 1; 
                 transform: translate(-50%, -50%) scale(1); 
-                filter: drop-shadow(0 0 20px rgba(255,215,0,0.8)); /* Tỏa hào quang vàng */
+                filter: drop-shadow(0 0 20px rgba(255,215,0,0.8)); 
             }
             100% { 
                 opacity: 0; 
-                transform: translate(-50%, -100%) scale(1.5); /* Bay vút lên trên */
+                transform: translate(-50%, -100%) scale(1.5); 
                 filter: drop-shadow(0 0 50px rgba(255,255,255,0)) blur(5px); 
             }
         }
@@ -179,10 +204,14 @@
 </head>
 <body>
     <div class="container">
-        <button id="chuyentrang">dự đoán đề thi văn</button>
         
-        <!-- Ảnh lư hương / đồ lễ -->
-        <img src="./tainguyen/thaphuong.png" alt="Thắp hương" onerror="this.onerror=null; this.src='https://placehold.co/400x300/444/white?text=Ảnh+Thắp+Hương';">
+        <!-- Khung chứa ảnh lư hương và nút chuyển trang bí mật -->
+        <div class="image-area">
+            <!-- Nút này đã được chỉnh lại style xanh lá và nhảy lên góc trên cùng bên phải -->
+            <button id="chuyentrang">Dự đoán đề thi văn</button>
+            
+            <img src="./tainguyen/thaphuong.png" alt="Thắp hương" onerror="this.onerror=null; this.src='https://placehold.co/400x300/444/white?text=Ảnh+Thắp+Hương';">
+        </div>
         
         <input id="nhap" type="text" placeholder="Nhập Nguyện Vọng Của Con Vào Đây...">
         <button id="Button">Cầu Nguyện</button>
@@ -193,17 +222,15 @@
                 <span class="close">&times;</span>
                 <h3 style="color: #ff416c; margin-top: 0;">Truyền Âm!</h3>
                 <p>Ta đã nhận được lời cầu nguyện của con.</p>
-                <p><strong>Ta sẽ cầu cho điều ước của con thành hiện thực. Yên tâm nhé!!</strong></p>
+                <p><strong>Ta sẽ độ cho điều ước của con thành hiện thực. Yên tâm nhé!!</strong></p>
             </div>
         </div>
     </div>
 
-    <!-- ẢNH ÔNG TIÊN ẨN (Sẽ hiện ra khi bấm nút) -->
-    <!-- Nếu chưa có ongtien.png, hệ thống sẽ lấy tạm 1 cái icon vị thần vui nhộn trên mạng -->
-    <img id="ongtien" src="ongtien.png" alt="Ông Tiên" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3069/3069172.png';">
+    <!-- ẢNH ÔNG TIÊN ẨN -->
+    <img id="ongtien" src="./tainguyen/ongtien.png" alt="Ông Tiên" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3069/3069172.png';">
      
     <script>
-        // --- GỘP JS CỦA KHANONLINE VÀ THÊM HIỆU ỨNG ---
         document.addEventListener('DOMContentLoaded', function() {
             var Buttoncaunguyen = document.getElementById('Button');
             var dialog = document.getElementById('customDialog');
@@ -219,31 +246,32 @@
                 if (nguyenVong === "") {
                     inputNguyenVong.style.border = "2px solid red";
                     inputNguyenVong.placeholder = "Khoan đã, con phải nhập nguyện vọng chứ!";
-                    return; // Dừng lại không cho khấn
+                    return; 
                 }
 
-                // Khôi phục lại viền input nếu trước đó bị đỏ
                 inputNguyenVong.style.border = "2px solid #ccc";
 
-                // 2. Khóa nút bấm và input trong lúc làm phép
+                // 2. Khóa nút bấm và input 
                 Buttoncaunguyen.disabled = true;
                 inputNguyenVong.disabled = true;
 
-                // 3. Gọi ông tiên hiện hồn
+                // 3. GỌI ÔNG TIÊN VÀ HIỆN NÚT CHUYỂN TRANG
                 ongtien.style.display = 'block';
                 ongtien.classList.remove('hien-hon');
-                void ongtien.offsetWidth; // Kích hoạt lại animation CSS
+                void ongtien.offsetWidth; // reset animation
                 ongtien.classList.add('hien-hon');
+                
+                // Kích hoạt class để nút hiện ra ở góc trên bên phải
+                chuyentrang.classList.add('show-btn');
 
-                // 4. Chờ 2.5 giây (đúng bằng thời gian hiệu ứng animation CSS)
+                // 4. Chờ 2.5 giây 
                 setTimeout(function() {
-                    // Ẩn ông tiên đi
+                    // Ẩn ông tiên đi 
                     ongtien.style.display = 'none';
                     
                     // Hiện hộp thoại thông báo
                     dialog.style.display = 'block';
                     
-                    // Mở khóa lại nút bấm và input, đồng thời xóa chữ cũ đi
                     Buttoncaunguyen.disabled = false;
                     inputNguyenVong.disabled = false;
                     inputNguyenVong.value = "";
@@ -251,19 +279,16 @@
                 }, 2500); 
             });
 
-            // Đóng dialog khi người dùng nhấn vào nút đóng (X)
             closeButton.addEventListener('click', function() {
                 dialog.style.display = 'none';
             });
 
-            // Đóng dialog khi click ra ngoài vùng xám
             window.addEventListener('click', function(event) {
                 if (event.target == dialog) {
                     dialog.style.display = 'none';
                 }
             });
 
-            // Chuyển trang sang đoán đề văn
             chuyentrang.addEventListener('click', function() {
                 document.location.href = 'randomdethivan.html';
             });
